@@ -1,0 +1,13 @@
+image: maven:3.8-jdk-11-slim
+
+cache:
+  paths:
+    - .m2/repository
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+build:
+  stage: build
+  script:
+    - mvn -B -V clean verify

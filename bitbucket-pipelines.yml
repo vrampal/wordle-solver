@@ -1,0 +1,9 @@
+image: maven:3.8-jdk-11-slim
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - maven
+        script:
+          - mvn -B -V clean verify
