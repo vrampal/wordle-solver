@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import lombok.Getter;
@@ -22,16 +24,26 @@ public class Dictionary {
   @Getter
   private final int wordLength;
   
-  private final List<String> content = new ArrayList<>();
+  private final Set<String> contentAsSet = new HashSet<>();
   
-  public boolean isValid(String word) {
+  private final List<String> contentAsList = new ArrayList<>();
+  
+  public int size() {
+    return contentAsSet.size();
+  }
+  
+  public boolean contains(String word) {
+    return contentAsSet.contains(word);
+  }
+  
+  public String fromIndex(int index) {
+    return contentAsList.get(index);
+  }
+  
+  boolean isValid(String word) {
     return (word.length() == wordLength) && ONLY_LETTERS.matcher(word).matches();
   }
 
-  public boolean contains(String word) {
-    return content.contains(word);
-  }
-  
   public void loadFile(String filename) throws IOException {
     try (Reader in = new FileReader(new File(filename))) {
       load(in);
@@ -39,21 +51,26 @@ public class Dictionary {
   }
 
   void load(Reader in) throws IOException {
-    int validLines = 0;
-    int invalidLines = 0;
+    int loadedWords = 0;
+    int skippedWords = 0;
     try (BufferedReader buff = new BufferedReader(in)) {
       String line = buff.readLine();
       while (line != null) {
         if (isValid(line)) {
-          content.add(line);
-          validLines++;
+          boolean modified = contentAsSet.add(line);
+          if (modified) {
+            contentAsList.add(line);
+            loadedWords++;
+          } else {
+            skippedWords++;
+          }
         } else {
-          invalidLines++;
+          skippedWords++;
         }
         line = buff.readLine();
       }
     }
-    log.info("Loaded {} lines, skipped {} lines", validLines, invalidLines);
+    log.info("Loaded {} words, skipped {} words", loadedWords, skippedWords);
   }
 
 }
