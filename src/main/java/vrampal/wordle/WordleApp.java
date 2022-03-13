@@ -3,7 +3,7 @@ package vrampal.wordle;
 import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
-import vrampal.wordle.secretguesser.RandomSecretGuesser;
+import vrampal.wordle.secretguesser.BruteForceSecretGuesser;
 import vrampal.wordle.secretmaker.RandomSecretMaker;
 
 @Slf4j
@@ -25,7 +25,7 @@ public class WordleApp {
     secretMaker.setBoard(board);
     secretMaker.play();
     
-    SecretGuesser secretGuesser = new RandomSecretGuesser();
+    SecretGuesser secretGuesser = new BruteForceSecretGuesser();
     secretGuesser.setBoard(board);
     
     int turnIdx = 0;
@@ -42,7 +42,7 @@ public class WordleApp {
     } else {
       winner = "SecretMaker";
     }
-    log.info("{} win", winner);
+    log.info("{} win, {} turns", winner, turnIdx);
   }
 
 }

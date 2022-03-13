@@ -9,7 +9,7 @@ import lombok.ToString;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode
 @ToString(of = {"colors"})
-public class Hint {
+public final class Hint {
 
   @Getter
   private final HintColor[] colors;

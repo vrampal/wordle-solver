@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class Board {
+public final class Board {
 
   private static final boolean SAFETY_CHECK = true;
 
@@ -16,10 +16,8 @@ public class Board {
   @Getter
   private final int gameLength;
 
-  @Getter
   private final String[] guesses;
 
-  @Getter
   private final Hint[] hints;
 
   private int currentTurnIdx = 0;
@@ -31,6 +29,14 @@ public class Board {
     this.gameLength = gameLength;
     guesses = new String[gameLength];
     hints = new Hint[gameLength];
+  }
+  
+  public String getGuess(int turnIdx) {
+    return guesses[turnIdx];
+  }
+  
+  public Hint getHint(int turnIdx) {
+    return hints[turnIdx];
   }
 
   public void recordSecret(String secretWord) {

@@ -1,19 +1,24 @@
 package vrampal.wordle.secretguesser;
 
-import java.security.SecureRandom;
 import java.util.Random;
 
-import lombok.Setter;
 import vrampal.wordle.Board;
 import vrampal.wordle.Dictionary;
 import vrampal.wordle.SecretGuesser;
 
 public class RandomSecretGuesser implements SecretGuesser {
 
-  protected final Random rand = new SecureRandom();
+  protected final Random rand = new Random();
   
-  @Setter
-  private Board board;
+  protected Board board;
+  
+  protected Dictionary dict;
+
+  @Override
+  public void setBoard(Board board) {
+    this.board = board;
+    this.dict = board.getDict();
+  }
 
   @Override
   public void play(int turnIdx) {
@@ -22,7 +27,6 @@ public class RandomSecretGuesser implements SecretGuesser {
   }
 
   protected final String selectRandom() {
-    Dictionary dict = board.getDict();
     int index = rand.nextInt(dict.size());
     return dict.fromIndex(index);
   }
