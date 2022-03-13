@@ -1,7 +1,14 @@
 package vrampal.wordle;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@EqualsAndHashCode
+@ToString(of = {"colors"})
 public class Hint {
 
   @Getter
