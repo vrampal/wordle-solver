@@ -76,9 +76,9 @@ public class BruteForceSecretGuesser extends RandomSecretGuesser {
     possibleSecrets = new ArrayList<>();
 
     // Keep only valid words from all words possible
-    for (int guessIdx = 0; guessIdx < dict.size(); guessIdx++) {
-      String hypothesis = dict.fromIndex(guessIdx);
-      if (checkHypothesisPossible(turnIdx, hypothesis)) {
+    for (int wordIdx = 0; wordIdx < dict.size(); wordIdx++) {
+      String hypothesis = dict.fromIndex(wordIdx);
+      if ((turnIdx == 0) || checkHypothesisPossible(turnIdx, hypothesis)) {
         possibleSecrets.add(hypothesis);
       }
     }
