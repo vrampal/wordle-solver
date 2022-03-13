@@ -23,7 +23,7 @@ public class WordleApp {
     
     SecretMaker secretMaker = new RandomSecretMaker();
     secretMaker.setBoard(board);
-    secretMaker.play();
+    secretMaker.selectSecret();
     
     SecretGuesser secretGuesser = new BruteForceSecretGuesser();
     secretGuesser.setBoard(board);

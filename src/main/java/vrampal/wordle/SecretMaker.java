@@ -4,6 +4,6 @@ public interface SecretMaker {
 
   void setBoard(Board board);
 
-  void play();
+  void selectSecret();
 
 }

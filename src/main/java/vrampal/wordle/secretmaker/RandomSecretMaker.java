@@ -21,7 +21,7 @@ public class RandomSecretMaker implements SecretMaker {
   }
 
   @Override
-  public void play() {
+  public void selectSecret() {
     String word = selectRandom();
     board.recordSecret(word);
   }
