@@ -11,23 +11,35 @@ import vrampal.wordle.secretmaker.RandomSecretMaker;
 @Slf4j
 public class WordleApp {
   
-  public static final int LETTER_COUNT = 5; // 5 letters words
-  
   public static void main(String[] args) throws IOException {
     new WordleApp().solveExternalGame();
   }
   
-  Dictionary loadDict() throws IOException {
-    Dictionary dict = new Dictionary(LETTER_COUNT);
+  Dictionary loadDictWordle() throws IOException {
+    Dictionary dict = new Dictionary(5); // 5 letters words
     dict.loadFile("data/worde-answers.csv");
     dict.loadFile("data/wordle-dictionnary.csv");
+    return dict;
+  }
+
+  Dictionary loadDictLeMot() throws IOException {
+    Dictionary dict = new Dictionary(5); // 5 letters words
+    dict.loadFile("data/lemot-dictionnary.csv");
+    dict.loadFile("data/lemot-extra50.csv");
+    return dict;
+  }
+
+  Dictionary loadDictAirportle() throws IOException {
+    Dictionary dict = new Dictionary(3); // 3 letters words
+    dict.loadFile("data/airport_codes.txt");
+    dict.loadFile("data/airport_answers.txt");
     return dict;
   }
 
   public void playOneGame() throws IOException {
     log.info("Starting new game");
     
-    Dictionary dict = loadDict();
+    Dictionary dict = loadDictWordle();
     Board board = new Board(dict, 6); // 6 turns to guess
     
     SecretMaker secretMaker = new RandomSecretMaker();
@@ -59,7 +71,10 @@ public class WordleApp {
   public void solveExternalGame() throws IOException {
     log.info("Starting new game");
     
-    Dictionary dict = loadDict();
+    Dictionary dict;
+    // dict = loadDictWordle();
+    // dict = loadDictLeMot();
+    dict = loadDictAirportle();
     Board board = new Board(dict, 6); // 6 turns to guess
     
     SecretGuesser secretGuesser;
@@ -67,11 +82,12 @@ public class WordleApp {
     secretGuesser = new EntropicSecretGuesser();
     secretGuesser.setBoard(board);
     
+    int wordLength = board.getDict().getWordLength();
     int turnIdx = 0;
     boolean found = false;
     while ((turnIdx < board.getGameLength()) && !found) {
       secretGuesser.play(turnIdx);
-      Hint hint = readHintFromConsole();
+      Hint hint = readHintFromConsole(wordLength);
       found = board.recordHint(turnIdx, hint);
       turnIdx++;
     }
@@ -85,7 +101,7 @@ public class WordleApp {
     log.info("{} win, {} turns", winner, turnIdx);
   }
   
-  Hint readHintFromConsole() throws IOException {
+  Hint readHintFromConsole(int wordLength) throws IOException {
     Hint hint = null;
     boolean valid = false;
     do {
@@ -93,10 +109,10 @@ public class WordleApp {
       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
       String line = reader.readLine();
       String[] elem = line.split(" ");
-      if (elem.length == LETTER_COUNT) {
+      if (elem.length == wordLength) {
         valid = true;
-        HintColor[] colors = new HintColor[LETTER_COUNT];
-        for (int index = 0; index < LETTER_COUNT; index++) {
+        HintColor[] colors = new HintColor[wordLength];
+        for (int index = 0; index < wordLength; index++) {
           HintColor color = HintColor.fromLetter(elem[index]);
           if (color == null) {
             valid = false;
