@@ -64,6 +64,14 @@ public class WordleApp {
     dict.loadFile("data/airport_answers.txt");
     return dict;
   }
+  
+  Dictionary loadDictPrimel() throws IOException {
+    // From https://converged.yt/primel/
+    Dictionary dict = new Dictionary(5); // 5 letters words
+    dict.loadFile("data/primel-primes.csv");
+    return dict;
+  }
+  
 
   public void playOneGame() throws IOException {
     log.info("Starting new game");
@@ -75,6 +83,7 @@ public class WordleApp {
     // dict = loadDictLeMotAlt5();
     // dict = loadDictLeMotAlt6();
     // dict = loadDictAirportle();
+    // dict = loadDictPrimel();
     Board board = new Board(dict, 6); // 6 turns to guess
     
     if (!EXTERNAL_SOURCE) {

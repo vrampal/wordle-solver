@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class Dictionary {
   
-  private static final Pattern ONLY_LETTERS = Pattern.compile("[a-zA-Z]+");
+  private static final Pattern VALID_CHARS = Pattern.compile("[0-9A-Za-z]+");
   
   @Getter
   private final int wordLength;
@@ -41,7 +41,7 @@ public class Dictionary {
   }
   
   boolean isValid(String word) {
-    return (word.length() == wordLength) && ONLY_LETTERS.matcher(word).matches();
+    return (word.length() == wordLength) && VALID_CHARS.matcher(word).matches();
   }
 
   public void loadFile(String filename) throws IOException {
