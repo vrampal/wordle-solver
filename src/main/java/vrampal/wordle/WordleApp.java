@@ -41,6 +41,22 @@ public class WordleApp {
     return dict;
   }
 
+  Dictionary loadDictLeMotAlt5() throws IOException {
+    // From https://www.solitaire-play.com/lemot/
+    Dictionary dict = new Dictionary(5); // 5 letters words
+    dict.loadFile("data/lemot-alt5-dictionnary.csv");
+    dict.loadFile("data/lemot-alt5-answers.csv");
+    return dict;
+  }
+
+  Dictionary loadDictLeMotAlt6() throws IOException {
+    // From https://www.solitaire-play.com/lemot6/
+    Dictionary dict = new Dictionary(6); // 6 letters words
+    dict.loadFile("data/lemot-alt6-dictionnary.csv");
+    dict.loadFile("data/lemot-alt6-answers.csv");
+    return dict;
+  }
+
   Dictionary loadDictAirportle() throws IOException {
     // From https://airportle.glitch.me/
     Dictionary dict = new Dictionary(3); // 3 letters words
@@ -56,6 +72,8 @@ public class WordleApp {
     dict = loadDictWordle();
     // dict = loadDictWordle2();
     // dict = loadDictLeMot();
+    // dict = loadDictLeMotAlt5();
+    // dict = loadDictLeMotAlt6();
     // dict = loadDictAirportle();
     Board board = new Board(dict, 6); // 6 turns to guess
     
