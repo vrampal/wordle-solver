@@ -11,18 +11,30 @@ import vrampal.wordle.secretmaker.RandomSecretMaker;
 @Slf4j
 public class WordleApp {
   
+  private static final boolean EXTERNAL_SOURCE = true;
+  
   public static void main(String[] args) throws IOException {
-    new WordleApp().solveExternalGame();
+    new WordleApp().playOneGame();
   }
   
   Dictionary loadDictWordle() throws IOException {
+    // From https://www.nytimes.com/games/wordle/index.html
     Dictionary dict = new Dictionary(5); // 5 letters words
-    dict.loadFile("data/worde-answers.csv");
+    dict.loadFile("data/wordle-answers.csv");
     dict.loadFile("data/wordle-dictionnary.csv");
     return dict;
   }
 
+  Dictionary loadDictWordle2() throws IOException {
+    // From https://www.wordhurdle.in/
+    Dictionary dict = new Dictionary(6); // 6 letters words
+    dict.loadFile("data/wordle2-answers.csv");
+    dict.loadFile("data/wordle2-dictionnary.csv");
+    return dict;
+  }
+
   Dictionary loadDictLeMot() throws IOException {
+    // From https://wordle.louan.me/
     Dictionary dict = new Dictionary(5); // 5 letters words
     dict.loadFile("data/lemot-dictionnary.csv");
     dict.loadFile("data/lemot-extra50.csv");
@@ -30,6 +42,7 @@ public class WordleApp {
   }
 
   Dictionary loadDictAirportle() throws IOException {
+    // From https://airportle.glitch.me/
     Dictionary dict = new Dictionary(3); // 3 letters words
     dict.loadFile("data/airport_codes.txt");
     dict.loadFile("data/airport_answers.txt");
@@ -39,43 +52,18 @@ public class WordleApp {
   public void playOneGame() throws IOException {
     log.info("Starting new game");
     
-    Dictionary dict = loadDictWordle();
-    Board board = new Board(dict, 6); // 6 turns to guess
-    
-    SecretMaker secretMaker = new RandomSecretMaker();
-    secretMaker.setBoard(board);
-    secretMaker.selectSecret();
-    
-    SecretGuesser secretGuesser;
-    // secretGuesser = new BruteForceSecretGuesser();
-    secretGuesser = new EntropicSecretGuesser();
-    secretGuesser.setBoard(board);
-    
-    int turnIdx = 0;
-    boolean found = false;
-    while ((turnIdx < board.getGameLength()) && !found) {
-      secretGuesser.play(turnIdx);
-      found = board.checkGuessFromSecret(turnIdx);
-      turnIdx++;
-    }
-    
-    String winner;
-    if (found) {
-      winner = "SecretBreaker";
-    } else {
-      winner = "SecretMaker";
-    }
-    log.info("{} win, {} turns", winner, turnIdx);
-  }
-  
-  public void solveExternalGame() throws IOException {
-    log.info("Starting new game");
-    
     Dictionary dict;
-    // dict = loadDictWordle();
+    dict = loadDictWordle();
+    // dict = loadDictWordle2();
     // dict = loadDictLeMot();
-    dict = loadDictAirportle();
+    // dict = loadDictAirportle();
     Board board = new Board(dict, 6); // 6 turns to guess
+    
+    if (!EXTERNAL_SOURCE) {
+      SecretMaker secretMaker = new RandomSecretMaker();
+      secretMaker.setBoard(board);
+      secretMaker.selectSecret();
+    }
     
     SecretGuesser secretGuesser;
     // secretGuesser = new BruteForceSecretGuesser();
@@ -87,8 +75,12 @@ public class WordleApp {
     boolean found = false;
     while ((turnIdx < board.getGameLength()) && !found) {
       secretGuesser.play(turnIdx);
-      Hint hint = readHintFromConsole(wordLength);
-      found = board.recordHint(turnIdx, hint);
+      if (!EXTERNAL_SOURCE) {
+        found = board.checkGuessFromSecret(turnIdx);
+      } else {
+        Hint hint = readHintFromConsole(wordLength);
+        found = board.recordHint(turnIdx, hint);
+      }
       turnIdx++;
     }
     
