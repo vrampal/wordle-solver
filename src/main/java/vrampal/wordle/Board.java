@@ -20,6 +20,7 @@ public final class Board {
 
   private final Hint[] hints;
 
+  @Getter
   private int currentTurnIdx = 0;
 
   private String secretWord = null;
@@ -40,11 +41,11 @@ public final class Board {
   }
 
   public void recordSecret(String secretWord) {
+    if (SAFETY_CHECK && (currentTurnIdx != 0)) {
+      throw new WordleException("Secret cannot be changed after start");
+    }
     if (SAFETY_CHECK && !dict.contains(secretWord)) {
       throw new WordleException("Secret word is not in dictionary");
-    }
-    if (SAFETY_CHECK && (this.secretWord != null)) {
-      throw new WordleException("Secret word already set");
     }
     this.secretWord = secretWord;
     log.info("SecretMaker choose {}", secretWord);
@@ -57,20 +58,21 @@ public final class Board {
     if (SAFETY_CHECK && !dict.contains(guess)) {
       throw new WordleException("Guess is not in dictionary");
     }
-    if (SAFETY_CHECK && (this.secretWord == null)) {
-      throw new WordleException("Secret has not been set yet");
-    }
     guesses[turnIdx] = guess;
-    currentTurnIdx++;
     log.info("SecretGuesser proposed {}", guess);
   }
-
-  boolean checkGuess(int turnIdx) {
-    String guess = guesses[turnIdx];
-    Hint hint = new Hint(secretWord, guess);
+  
+  boolean recordHint(int turnIdx, Hint hint) {
     hints[turnIdx] = hint;
+    currentTurnIdx++;
     log.info("Get {}", hint);
     return hint.isVictory();
+  }
+
+  boolean checkGuessFromSecret(int turnIdx) {
+    String guess = guesses[turnIdx];
+    Hint hint = new Hint(secretWord, guess);
+    return recordHint(turnIdx, hint);
   }
 
 }

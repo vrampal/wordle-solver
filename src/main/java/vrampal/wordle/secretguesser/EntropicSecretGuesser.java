@@ -8,6 +8,8 @@ import vrampal.wordle.Hint;
 
 @Slf4j
 public class EntropicSecretGuesser extends BruteForceSecretGuesser {
+  
+  private static final boolean RANDOM_FIRST_TURN = false; // Non optimal but great speed boost
 
   static final class MutableCounter {
     int value;
@@ -18,7 +20,7 @@ public class EntropicSecretGuesser extends BruteForceSecretGuesser {
   @Override
   public void play(int turnIdx) {
     String hypothesis;
-    if (turnIdx == 0) {
+    if (RANDOM_FIRST_TURN && (turnIdx == 0)) {
       hypothesis = selectRandom();
     } else {
       hypothesis = compute(turnIdx);
