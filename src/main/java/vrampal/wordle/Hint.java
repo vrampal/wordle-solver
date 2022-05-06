@@ -1,12 +1,9 @@
 package vrampal.wordle;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 @ToString(of = {"colors"})
 public final class Hint {
@@ -16,6 +13,17 @@ public final class Hint {
 
   @Getter
   private final boolean victory;
+
+  public Hint(HintColor[] colors) {
+    this.colors = colors;
+    boolean vict = true;
+    for (HintColor col : colors) {
+      if (col != HintColor.GREEN) {
+        vict = false;
+      }
+    }
+    victory = vict;
+  }
 
   public Hint(String secret, String candidate) {
     int length = secret.length();

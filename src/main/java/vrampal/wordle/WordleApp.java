@@ -138,7 +138,7 @@ public class WordleApp {
           }
           colors[index] = color;
         }
-        hint = new Hint(colors, false);
+        hint = new Hint(colors);
       }
     } while(!valid);
     return hint;
